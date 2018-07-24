@@ -365,7 +365,7 @@ class Moderator:
             return
 
         # is explicit found?
-        result = find_explicit(text)
+        result = await find_explicit(text)
 
         if not result:
             return

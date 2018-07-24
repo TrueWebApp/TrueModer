@@ -106,7 +106,7 @@ async def item_in_text(item_list, text):
 
 
 async def find_explicit(text: str):
-    if text.lower() in explicit_list or item_in_text(explicit_list, text.lower()):
+    if text.lower() in explicit_list or await item_in_text(explicit_list, text.lower()):
         return True
     else:
         return False
