@@ -46,6 +46,17 @@ async def errors_handler(dispatcher, update, exception):
     logger.exception(f'Update: {update} \n{exception}', exc_info=True)
 
 
+@dp.message_handler(types.ChatType.is_private, commands=['start', 'help'])
+async def start_private(message: types.Message):
+    text = _('<b>Привет, я бот-модератор!</b> \n'
+             'Добавь меня в чат, чтобы навести там порядок')
+
+    markup = types.InlineKeyboardMarkup()
+    add_group = f'https://telegram.me/{config.BOT_NAME[1:]}?startgroup=true'
+    markup.add(types.InlineKeyboardButton(text=f'Добавить модератора в чат', url=add_group))
+    await message.reply(text, reply_markup=markup, reply=False)
+
+
 async def register_handlers():
     # bot join chat handlers
     dp.register_message_handler(help.welcome, custom_filters=[types.ChatType.is_super_group],
@@ -64,17 +75,6 @@ async def register_handlers():
     # explicit filter
     dp.register_message_handler(moder.check_explicit, custom_filters=[types.ChatType.is_super_group],
                                 content_types=types.ContentType.TEXT)
-
-
-@dp.message_handler(types.ChatType.is_private, commands=['start', 'help'])
-async def start_private(message: types.Message):
-    text = _('<b>Привет, я бот-модератор!</b> \n'
-             'Добавь меня в чат, чтобы навести там порядок')
-
-    markup = types.InlineKeyboardMarkup()
-    add_group = f'https://telegram.me/{config.BOT_NAME[1:]}?startgroup=true'
-    markup.add(types.InlineKeyboardButton(text=f'Добавить модератора в чат', url=add_group))
-    await message.reply(text, reply_markup=markup, reply=False)
 
 
 async def on_startup(_):
