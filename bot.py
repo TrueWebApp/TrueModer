@@ -14,6 +14,38 @@ loop = asyncio.get_event_loop()
 moder = None
 
 
+@dp.errors_handler()
+async def errors_handler(dispatcher, update, exception):
+    from aiogram.utils.exceptions import BadRequest, Unauthorized, InvalidQueryID, TelegramAPIError, \
+        CantDemoteChatCreator, MessageNotModified, MessageToDeleteNotFound
+
+    if isinstance(exception, CantDemoteChatCreator):
+        logger.debug("Can't demote chat creator")
+        return
+
+    if isinstance(exception, MessageNotModified):
+        logger.debug('Message is not modified')
+        return
+
+    if isinstance(exception, MessageToDeleteNotFound):
+        logger.debug('Message to delete not found')
+        return
+
+    if isinstance(exception, Unauthorized):
+        logger.info(f'Unauthorized: {exception}')
+        return
+
+    if isinstance(exception, InvalidQueryID):
+        logger.exception(f'InvalidQueryID: {exception} \nUpdate: {update}', exc_info=True)
+        return
+
+    if isinstance(exception, TelegramAPIError):
+        logger.exception(f'TelegramAPIError: {exception} \nUpdate: {update}', exc_info=True)
+        return
+
+    logger.exception(f'Update: {update} \n{exception}', exc_info=True)
+
+
 async def register_handlers():
     # bot join chat handlers
     dp.register_message_handler(help.welcome, custom_filters=[types.ChatType.is_super_group],
