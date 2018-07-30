@@ -2,10 +2,13 @@ import logging
 import asyncio
 import config
 from aiogram import Bot, Dispatcher, types
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.utils import context
 from moderator import Moderator
 
 logger = logging.getLogger(f'TrueModer.{__name__}')
 loop = asyncio.get_event_loop()
+loop.set_task_factory(context.task_factory)
 
 
 def get_proxy_data():
@@ -30,5 +33,5 @@ def get_proxy_data():
 # vars and instances
 url, auth = get_proxy_data()
 bot = Bot(token=config.TELEGRAM_TOKEN, loop=loop, proxy=url, proxy_auth=auth, parse_mode=types.ParseMode.HTML)
-dp = Dispatcher(bot)
+dp = Dispatcher(bot, storage=MemoryStorage(), run_tasks_by_default=True)
 moder = Moderator(bot)

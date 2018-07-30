@@ -4,9 +4,10 @@ import help
 import config
 
 from aiogram import types
-from aiogram.utils.executor import start_polling
+from aiogram.utils.executor import start_polling, start_webhook
 from languages import underscore as _
-from engine import dp, moder
+from engine import dp, moder, bot
+from antiflood import ThrottlingMiddleware
 
 # logging
 logging.basicConfig(level=logging.INFO)
@@ -79,11 +80,19 @@ async def register_handlers():
 
 async def on_startup(_):
     await register_handlers()
+    dp.middleware.setup(ThrottlingMiddleware(limit=0))
+
+    if config.WEBHOOK:
+        await bot.set_webhook(config.WEBHOOK_URL)
 
 
 async def on_shutdown(_):
-    pass
+    await bot.close()
 
 
 if __name__ == '__main__':
-    start_polling(dp, loop=loop, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown)
+    if config.WEBHOOK:
+        start_webhook(dp, webhook_path=config.WEBHOOK_PATH, loop=loop, skip_updates=True, on_startup=on_startup,
+                      on_shutdown=on_shutdown, host=config.WEBAPP_HOST, port=config.WEBAPP_PORT)
+    else:
+        start_polling(dp, loop=loop, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown)

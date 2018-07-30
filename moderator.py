@@ -4,6 +4,7 @@ from aiogram import types, Bot
 from datetime import datetime, timedelta
 from misc import log_repr
 from languages import underscore as _
+from antiflood import rate_limit
 
 import asyncio as aio
 import logging
@@ -335,8 +336,11 @@ class Moderator:
         except TelegramAPIError as e:
             logger.error(f'Error: \n{e}')
 
+    @rate_limit(0.5, 'text')
     async def check_explicit(self, message: types.Message):
         from explicit import find_explicit
+
+        logger.info('text')
 
         text = message.text
         chat = message.chat
