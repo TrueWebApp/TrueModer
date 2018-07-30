@@ -11,4 +11,5 @@ PROXY_PASSWORD = 'proxy_password'
 super_admins = [12345678, ]
 
 # content
+BOT_NAME = '@TrueModerBot'
 FAQ_LINK = 'http://google.com'

@@ -3,19 +3,20 @@ import re
 
 logger = logging.getLogger(f'TrueModer.{__name__}')
 
-explicit_re = (
+my_patterns = (
     r'^(\w*бля\w*)$',
-    r'([нпз]?[?аео]?[хк]у[йеё]\w*)'
+    r'([нпз]?[?аео]?[хк]у[йеё]\w*)',
+    r'\w*п[иi]зд\w*'
 
 )
 
-d = (
+external_patterns = (
     # основной фильтр
-    '(?:\w*(?:[хxh](?:[уyu][иiu])|[пnp][еиeiu](?:[з3z][дd]|[дd](?:[еаоeoa0][рpr]|[рpr]))|[бb6][лl]я[дd]|[оo0][хxh][уyu]'
-    '[еe]|[мm][уyu][дd][еоиаeioau0]|[дd][еe][рpr][ьb]|[гrg][аоoa0][вbv][нhn]|[уyu][еёe][бb6])|[хxh][\W_]*(?:[уyu][\W_]*'
-    '[йиеёяeiju])|[пnp][\W_]*[еиeiu][\W_]*(?:[з3z][\W_]*[дd]|[дd][\W_]*(?:[еаоeoa0][\W_]*[рpr]|[рpr]))|[бb6][\W_]*[лl]'
-    '[\W_]*я[\W_]*[дd]|[оo0][\W_]*[хxh][\W_]*[уyu][\W_]*[еe]|[мm][\W_]*[уyu][\W_]*[дd][\W_]*[еоиаeioau0]|[дd][\W_]*[еe]'
-    '[\W_]*[рpr][\W_]*[ьb]|[гrg][\W_]*[аоoa0][\W_]*[вbv][\W_]*[нhn]|[уyu][\W_]*[еёe][\W_]*[бb6]|[ёеe][бb6])\w+',
+    # '(?:\w*(?:[хxh](?:[уyu][иiu])|[пnp][еиeiu](?:[з3z][дd]|[дd](?:[еаоeoa0][рpr]|[рpr]))|[бb6][лl]я[дd]|[оo0][хxh][уyu]'
+    # '[еe]|[мm][уyu][дd][еоиаeioau0]|[дd][еe][рpr][ьb]|[гrg][аоoa0][вbv][нhn]|[уyu][еёe][бb6])|[хxh][\W_]*(?:[уyu][\W_]*'
+    # '[йиеёяeiju])|[пnp][\W_]*[еиeiu][\W_]*(?:[з3z][\W_]*[дd]|[дd][\W_]*(?:[еаоeoa0][\W_]*[рpr]|[рpr]))|[бb6][\W_]*[лl]'
+    # '[\W_]*я[\W_]*[дd]|[оo0][\W_]*[хxh][\W_]*[уyu][\W_]*[еe]|[мm][\W_]*[уyu][\W_]*[дd][\W_]*[еоиаeioau0]|[дd][\W_]*[еe]'
+    # '[\W_]*[рpr][\W_]*[ьb]|[гrg][\W_]*[аоoa0][\W_]*[вbv][\W_]*[нhn]|[уyu][\W_]*[еёe][\W_]*[бb6]|[ёеe][бb6])\w+',
 
     # жоп*
     'ж[\W_]*(?:[оo0][\W_]*[пnp][\W_]*(?:[аa]|[oо0](?:[\W_]*[хxh])?|[уеыeyiuё]|[оo0][\W_]*[йj])\w*)',
@@ -100,7 +101,7 @@ d = (
     '[хxh][\W_]*[уyu][\W_]*(?:[еёиeiu][\W_]*(?:[сsc][\W_]*[оo0][\W_]*[сsc]|[пnp][\W_]*[лl][\W_]*[еe][\W_]*[тt]|[нhn][\W_]*[ыi][\W_]*ш)(?:[\W_]*[аыуyiau]|[\W_]*[оаoa0][\W_]*[мm](?:[\W_]*[иiu])?|[нhn][\W_]*(?:[ыиiu][\W_]*[йj]|[аa][\W_]*я|[оo0][\W_]*[йеej]|[ыi][\W_]*[хxh]|[ыi][\W_]*[еe]|[ыi][\W_]*[мm](?:[\W_]*[иiu])?|[уyu][\W_]*ю|[оo0][\W_]*[мm][\W_]*[уyu]))?|[дd][\W_]*[оo0][\W_]*ё[\W_]*[бb6][\W_]*[иiu][\W_]*[нhn][\W_]*(?:[оo0][\W_]*[йj]|[аеыуeyiau]))',
 
     # бляд*
-    '[бb6][\W_]*[лl][\W_]*(я|[еe][аa])(?:[\W_]*[дтdt][ьъ]?[\W_]*(?:[ьb]|[иiu]|[кk][\W_]*[иiu]|[сsc][\W_]*[тt][\W_]*[вbv][\W_]*[оo0]|[сsc][\W_]*[кk][\W_]*(?:[оo0][\W_]*[ейej]|[иiu][\W_]*[еe]|[аa][\W_]*я|[иiu][\W_]*[йj]|[оo0][\W_]*[гrg][\W_]*[оo0])))?',
+    '(\w*[бb6][\W_]*[лl][\W_]*(я|[еe][аa])(?:[\W_]*[дтdt][ьъ]?[\W_]*(?:[ьb]|[иiu]|[кk][\W_]*[иiu]|[сsc][\W_]*[тt][\W_]*[вbv][\W_]*[оo0]|[сsc][\W_]*[кk][\W_]*(?:[оo0][\W_]*[ейej]|[иiu][\W_]*[еe]|[аa][\W_]*я|[иiu][\W_]*[йj]|[оo0][\W_]*[гrg][\W_]*[оo0])))?)',
 
     # выбляд*
     '[вbv][\W_]*[ыi][\W_]*[бb6][\W_]*[лl][\W_]*я[\W_]*[дd][\W_]*(?:[оo0][\W_]*[кk]|[кk][\W_]*(?:[иуаеeiyau]|[аa][\W_]*[мm](?:[\W_]*[иiu])?))',
@@ -215,8 +216,10 @@ exclude_list = (
 
 
 async def find_explicit(text: str):
-    for i in explicit_re:
-        to_find = re.compile(i)
+    patterns = my_patterns + external_patterns
+
+    for pattern in patterns:
+        to_find = re.compile(pattern)
         result = re.search(to_find, text)
 
         if result:
@@ -225,7 +228,7 @@ async def find_explicit(text: str):
             if word in exclude_list:
                 continue
 
-            logger.info(word)
+            logger.info(f'{word} - {pattern}')
             return True
 
     return False

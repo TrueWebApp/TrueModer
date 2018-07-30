@@ -20,30 +20,12 @@ jail = {}
 
 
 class Moderator:
-    from engine import bot as _bot
-    instance = None
+    def __init__(self, bot):
+        self._bot: Bot = bot
 
-    def __init__(self, bot_user: types.User):
-        self.user = bot_user
-
-    @classmethod
-    async def get_instance(cls):
-        """
-        :return: Moderator instance. New or cached.
-        :rtype: Moderator
-        """
-        if isinstance(cls.instance, cls):
-            logger.debug('Moderator instance is here!')
-            return cls.instance
-
-        if not isinstance(cls._bot, Bot):
-            logger.error("There's not Bot here!")
-            return
-
-        logger.debug('Creating new moderator instance')
-        bot_user = await cls._bot.me
-        cls.instance = cls(bot_user)
-        return cls.instance
+    @property
+    async def me(self):
+        return await self._bot.me
 
     async def say(self, chat_id, text, reply_markup=None, disable_web_page_preview=None):
         """

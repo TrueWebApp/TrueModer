@@ -2,6 +2,7 @@ import logging
 import asyncio
 import config
 from aiogram import Bot, Dispatcher, types
+from moderator import Moderator
 
 logger = logging.getLogger(f'TrueModer.{__name__}')
 loop = asyncio.get_event_loop()
@@ -30,3 +31,4 @@ def get_proxy_data():
 url, auth = get_proxy_data()
 bot = Bot(token=config.TELEGRAM_TOKEN, loop=loop, proxy=url, proxy_auth=auth, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
+moder = Moderator(bot)

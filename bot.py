@@ -1,17 +1,17 @@
 import asyncio
 import logging
 import help
+import config
 
 from aiogram import types
 from aiogram.utils.executor import start_polling
 from languages import underscore as _
-from engine import dp
+from engine import dp, moder
 
 # logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('TrueModer')
 loop = asyncio.get_event_loop()
-moder = None
 
 
 @dp.errors_handler()
@@ -62,20 +62,22 @@ async def register_handlers():
     dp.register_message_handler(moder.mute, regexp=r'^!.*мол[ч,к].*', content_types=types.ContentType.TEXT)
 
     # explicit filter
-    dp.register_message_handler(moder.check_explicit, content_types=types.ContentType.TEXT)
+    dp.register_message_handler(moder.check_explicit, custom_filters=[types.ChatType.is_super_group],
+                                content_types=types.ContentType.TEXT)
 
 
-@dp.message_handler(types.ChatType.is_private, commands=['start'])
+@dp.message_handler(types.ChatType.is_private, commands=['start', 'help'])
 async def start_private(message: types.Message):
-    text = _('Привет, я бот-модератор! \n'
+    text = _('<b>Привет, я бот-модератор!</b> \n'
              'Добавь меня в чат, чтобы навести там порядок')
-    await message.reply(text)
+
+    markup = types.InlineKeyboardMarkup()
+    add_group = f'https://telegram.me/{config.BOT_NAME[1:]}?startgroup=true'
+    markup.add(types.InlineKeyboardButton(text=f'Добавить модератора в чат', url=add_group))
+    await message.reply(text, reply_markup=markup, reply=False)
 
 
 async def on_startup(_):
-    from moderator import Moderator
-    global moder
-    moder = await Moderator.get_instance()
     await register_handlers()
 
 
