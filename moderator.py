@@ -336,6 +336,17 @@ class Moderator:
         except TelegramAPIError as e:
             logger.error(f'Error: \n{e}')
 
+    @staticmethod
+    async def delete_message(message: types.Message):
+        try:
+            await message.delete()
+
+        except TelegramAPIError:
+            pass
+
+        else:
+            return True
+
     @rate_limit(0.5, 'text')
     async def check_explicit(self, message: types.Message):
         from explicit import find_explicit
@@ -346,16 +357,19 @@ class Moderator:
         chat = message.chat
         user = message.from_user
 
-        # message without text
+        # message without text skip
         if not text:
             return
 
         # is explicit found?
         result = await find_explicit(text)
-
         if not result:
             return
 
+        # let's delete bad message
+        await self.delete_message(message)
+
+        # notify user
         try:
             jail[user.id] += 1
         except KeyError:
