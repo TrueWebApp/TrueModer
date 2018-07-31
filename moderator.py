@@ -1,4 +1,4 @@
-from aiogram.utils.exceptions import BadRequest, Unauthorized, RetryAfter, TelegramAPIError, MessageError
+from aiogram.utils.exceptions import *
 from aiogram.utils import markdown as md
 from aiogram import types, Bot
 from datetime import datetime, timedelta

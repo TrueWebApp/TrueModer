@@ -225,7 +225,7 @@ async def find_explicit(text: str):
         if result:
             word = result.group()
 
-            if word in exclude_list:
+            if word.lower() in exclude_list:
                 continue
 
             logger.info(f'{word} - {pattern}')
