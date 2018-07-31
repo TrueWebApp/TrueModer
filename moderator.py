@@ -341,8 +341,8 @@ class Moderator:
         try:
             await message.delete()
 
-        except TelegramAPIError:
-            pass
+        except TelegramAPIError as e:
+            logger.error(f'TelegramAPIError: {e}')
 
         else:
             return True
