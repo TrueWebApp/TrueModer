@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from misc import log_repr
 from languages import underscore as _
 from antiflood import rate_limit
-from engine import cb
+from aiochatbase import Chatbase
 
 import asyncio as aio
 import logging
@@ -22,8 +22,9 @@ jail = {}
 
 
 class Moderator:
-    def __init__(self, bot):
+    def __init__(self, bot, cb):
         self._bot: Bot = bot
+        self.cb: Chatbase = cb
 
     @property
     async def me(self):
@@ -368,10 +369,10 @@ class Moderator:
         # is explicit found?
         result = await find_explicit(text)
         if not result:
-            await cb.register_message(user_id=user.id, intent='normal message')
+            await self.cb.register_message(user_id=user.id, intent='normal message')
             return
         logger.info(f'Found explicit in message: {text}')
-        await cb.register_message(user_id=user.id, intent='explicit message')
+        await self.cb.register_message(user_id=user.id, intent='explicit message')
 
         # let's delete bad message
         await self.delete_message(message)
