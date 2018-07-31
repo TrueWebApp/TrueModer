@@ -6,7 +6,7 @@ import config
 from aiogram import types
 from aiogram.utils.executor import start_polling, start_webhook
 from languages import underscore as _
-from engine import dp, moder, bot
+from engine import dp, moder, bot, cb
 from antiflood import ThrottlingMiddleware
 from misc import set_logging_levels
 
@@ -91,6 +91,7 @@ async def on_startup(_):
 
 async def on_shutdown(_):
     await bot.close()
+    await cb.close()
 
 
 if __name__ == '__main__':
