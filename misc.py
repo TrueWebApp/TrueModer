@@ -4,6 +4,10 @@ from aiogram import types
 logger = logging.getLogger(f'TrueModer.{__name__}')
 
 
+def set_logging_levels():
+    logging.getLogger('aiohttp').setLevel(logging.WARNING)
+
+
 def log_repr(o):
     """
     Represents object to log view
