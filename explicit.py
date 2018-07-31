@@ -216,7 +216,7 @@ exclude_list = (
 
 
 async def find_explicit(text: str):
-    patterns = my_patterns + external_patterns
+    patterns = my_patterns
 
     for pattern in patterns:
         to_find = re.compile(pattern, flags=re.IGNORECASE)
@@ -229,6 +229,11 @@ async def find_explicit(text: str):
                 continue
 
             logger.info(f'{word} - {pattern}')
+            return True
+
+    for word in text.lower().split():
+        if word in explicit_list:
+            logger.info(f'{word}')
             return True
 
     return False
