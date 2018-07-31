@@ -17,9 +17,12 @@ PROXY_URL = 'socks5://8.8.8.8:1080'  # or '' to disable
 PROXY_LOGIN = 'proxy_login'  # or '' to disable
 PROXY_PASSWORD = 'proxy_password'  # or '' to disable
 
+# analytics
+CHATBASE_KEY = 'agGNsfuREYdagrCPkgLvda1C_5frsZsBYrv'
+
 # vars
 super_admins = [12345678, ]
 
 # content
 BOT_NAME = '@TrueModerBot'
-FAQ_LINK = 'http://google.com'
+FAQ_LINK = 'http://telegra.ph/True-Moder-07-31'
