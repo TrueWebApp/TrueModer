@@ -351,8 +351,6 @@ class Moderator:
     async def check_explicit(self, message: types.Message):
         from explicit import find_explicit
 
-        logger.info('text')
-
         text = message.text
         chat = message.chat
         user = message.from_user
@@ -365,6 +363,7 @@ class Moderator:
         result = await find_explicit(text)
         if not result:
             return
+        logger.info(f'Found explicit in message: {text}')
 
         # let's delete bad message
         await self.delete_message(message)
