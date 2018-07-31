@@ -168,12 +168,18 @@ class Moderator:
 
             if 'not enough rights' in str(error):
                 logger.debug('Не хватает прав на совершение действия')
+                text = _('Я бы с удовольствием произвёл блокировку, но мне не хватает администраторских прав')
+                await self.say(chat_id, text)
 
             elif 'an administrator of the chat' in str(error):
                 logger.debug(f'Зачем-то пытается ограничить админа :)')
+                text = _('Я не могу заблокировать админа')
+                await self.say(chat_id, text)
 
             else:
                 logger.exception(f'BadRequest: {error}', exc_info=True)
+                text = _('Не шмогла :(')
+                await self.say(chat_id, text)
 
     async def ban(self, message):
         """
@@ -216,12 +222,18 @@ class Moderator:
 
                 if 'not enough rights' in str(error):
                     logger.debug('Не хватает прав на совершение действия')
+                    text = _('Я бы с удовольствием произвёл блокировку, но мне не хватает администраторских прав')
+                    await self.say(chat.id, text)
 
                 elif 'an administrator of the chat' in str(error):
                     logger.debug(f'Зачем-то пытается ограничить админа :)')
+                    text = _('Я не могу заблокировать админа')
+                    await self.say(chat.id, text)
 
                 else:
                     logger.exception(f'BadRequest: {error}', exc_info=True)
+                    text = _('Я не могу заблокировать админа')
+                    await self.say(chat.id, text)
 
             else:
                 await self._bot.send_message(chat.id, 'Готово! :)')
@@ -316,18 +328,27 @@ class Moderator:
                                                  can_add_web_page_previews=False,
                                                  can_send_media_messages=False,
                                                  until_date=until)
+
         except BadRequest as e:
             if "Can't demote chat creator" in str(e) or "can't demote chat creator" in str(e):
                 logger.debug(f"Restriction: can't demote chat creator at {chat_id}")
+                text = _('Не могу я создателя блочить!')
+                await self.say(chat_id, text)
 
             elif "is an administrator of the chat" in str(e):
                 logger.debug(f"Restriction: can't demote chat admin at {chat_id}")
+                text = _('Не могу я админа блочить!')
+                await self.say(chat_id, text)
 
             elif "Not enough rights to restrict/unrestrict chat member" in str(e):
-                logger.debug(f"Not enough rights to restrict/unrestrict chat member at {chat_id}")
+                logger.warning(f"Not enough rights to restrict/unrestrict chat member at {chat_id}")
+                text = _('Я бы с удовольствием произвёл блокировку, но мне не хватает администраторских прав')
+                await self.say(chat_id, text)
 
             else:
                 logger.exception(f'Error: \n{e}', exc_info=True)
+                text = _('Не шмогла :(')
+                await self.say(chat_id, text)
 
         except RetryAfter:
             logging.error(f'Message limit reached! {RetryAfter}')
@@ -337,6 +358,9 @@ class Moderator:
 
         except TelegramAPIError as e:
             logger.error(f'Error: \n{e}')
+
+        else:
+            return True
 
     @staticmethod
     async def delete_message(message: types.Message):
