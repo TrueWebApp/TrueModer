@@ -1,4 +1,4 @@
-from aiogram.utils.exceptions import BadRequest, Unauthorized, RetryAfter, TelegramAPIError
+from aiogram.utils.exceptions import BadRequest, Unauthorized, RetryAfter, TelegramAPIError, MessageError
 from aiogram.utils import markdown as md
 from aiogram import types, Bot
 from datetime import datetime, timedelta
@@ -338,8 +338,13 @@ class Moderator:
 
     @staticmethod
     async def delete_message(message: types.Message):
+        chat = message.chat
+
         try:
             await message.delete()
+
+        except MessageError as e:
+            logger.info(f"Can't delete message in {chat.full_name} ({chat.id}), cause: {e}")
 
         except TelegramAPIError as e:
             logger.error(f'TelegramAPIError: {e}')
