@@ -219,7 +219,7 @@ async def find_explicit(text: str):
     patterns = my_patterns + external_patterns
 
     for pattern in patterns:
-        to_find = re.compile(pattern)
+        to_find = re.compile(pattern, flags=re.IGNORECASE)
         result = re.search(to_find, text)
 
         if result:
