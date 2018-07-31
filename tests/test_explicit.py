@@ -8,7 +8,7 @@ pytestmark = pytest.mark.asyncio
 async def test_explicit(event_loop):
     """ huy test """
     test_data = (
-        'хуй', 'хуйло',
+        'хуй', 'хуйло', 'бля', 'пиздец'
     )
     for word in test_data:
         txt = f'Какое-то предложение и {word} среди него'
