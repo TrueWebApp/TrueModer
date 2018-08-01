@@ -1,5 +1,5 @@
 import logging
-from aiogram import types
+from aiogram.types import Chat, User
 
 logger = logging.getLogger(f'TrueModer.{__name__}')
 
@@ -13,13 +13,14 @@ def log_repr(o):
     """
     Represents object to log view
     :param o:
+    :type o: Chat or User
     :return:
     :rtype: str
     """
-    if isinstance(o, types.Chat):
+    if isinstance(o, Chat):
         return f'{o.full_name} ({o.id})'
 
-    if isinstance(o, types.User):
+    if isinstance(o, User):
         return f'{o.full_name} ({o.id})'
 
     return None
