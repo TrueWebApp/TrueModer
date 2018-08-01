@@ -17,14 +17,14 @@ def get_proxy_data():
         proxy = config.PROXY_URL
         if proxy.startswith('socks5'):
             import aiosocksy
-            logger.debug('Socks5 proxy enabled.')
+            logger.info('Socks5 proxy enabled.')
             proxy_auth = aiosocksy.Socks5Auth(login=config.PROXY_LOGIN, password=config.PROXY_PASSWORD)
         else:
             import aiohttp
-            logger.debug('HTTP proxy enabled.')
+            logger.info('HTTP proxy enabled.')
             proxy_auth = aiohttp.BasicAuth(login=config.PROXY_LOGIN, password=config.PROXY_PASSWORD)
     else:
-        logger.debug('Proxy disabled.')
+        logger.info('Proxy disabled.')
         proxy = None
         proxy_auth = None
 
