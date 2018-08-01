@@ -6,7 +6,7 @@ logger = logging.getLogger(f'TrueModer.{__name__}')
 
 def set_logging_levels():
     logging.getLogger('aiohttp').setLevel(logging.WARNING)
-    logging.getLogger('chatbase').setLevel(logging.WARNING)
+    logging.getLogger('chatbase').setLevel(logging.INFO)
 
 
 def log_repr(o):
