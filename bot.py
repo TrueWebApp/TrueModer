@@ -20,6 +20,14 @@ loop = asyncio.get_event_loop()
 
 @dp.errors_handler()
 async def errors_handler(dispatcher, update, exception):
+    """
+    Exceptions handler. Catches all exceptions within task factory tasks.
+
+    :param dispatcher:
+    :param update:
+    :param exception:
+    :return: stdout logging
+    """
     from aiogram.utils.exceptions import BadRequest, Unauthorized, InvalidQueryID, TelegramAPIError, \
         CantDemoteChatCreator, MessageNotModified, MessageToDeleteNotFound
 
@@ -52,6 +60,12 @@ async def errors_handler(dispatcher, update, exception):
 
 @dp.message_handler(types.ChatType.is_private, commands=['start', 'help'])
 async def start_private(message: types.Message):
+    """
+    Handle start and help commands in private chat
+
+    :param message:
+    :return:
+    """
     text = _('<b>Привет, я бот-модератор!</b> \n'
              'Добавь меня в чат, чтобы навести там порядок')
 
@@ -62,6 +76,11 @@ async def start_private(message: types.Message):
 
 
 async def register_handlers():
+    """
+    Function-container with registering external (non-decorated) handlers
+    Don't forget about order of registered handlers! It really matters!
+    :return: None
+    """
     # bot join chat handlers
     dp.register_message_handler(help.welcome, custom_filters=[types.ChatType.is_super_group],
                                 content_types=types.ContentType.NEW_CHAT_MEMBERS)
@@ -82,6 +101,12 @@ async def register_handlers():
 
 
 async def on_startup(_):
+    """
+    Auto exec function on startup of your app
+
+    :param _: dispatcher
+    :return: None
+    """
     await register_handlers()
     dp.middleware.setup(ThrottlingMiddleware(limit=0))
 
@@ -90,6 +115,12 @@ async def on_startup(_):
 
 
 async def on_shutdown(_):
+    """
+    Auto exec function on shutdown of your app
+
+    :param _: dispatcher
+    :return: None
+    """
     await bot.close()
     await cb.close()
 
