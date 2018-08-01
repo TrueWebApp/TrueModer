@@ -32,13 +32,14 @@ class Moderator:
 
     async def say(self, chat_id, text, reply_markup=None, disable_web_page_preview=None):
         """
-        Overrides send message and catches exceptions
+        Overrides bot.send_message and catches exceptions
 
         :param chat_id:
         :param text:
         :param reply_markup:
         :param disable_web_page_preview:
-        :return:
+        :return: message
+        :rtype: Message or None
         """
         try:
             msg = await self._bot.send_message(chat_id=chat_id, text=text, reply_markup=reply_markup,
