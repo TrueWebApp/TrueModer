@@ -381,6 +381,7 @@ class Moderator:
 
     @rate_limit(0.5, 'text')
     async def check_text(self, message: types.Message):
+        logger.info('Checking text')
         await self.check_explicit(message)
         await self.check_link(message)
 
@@ -437,6 +438,7 @@ class Moderator:
 
     @rate_limit(0.5, 'link')
     async def check_link(self, message: types.Message):
+        logger.info("Lets check links")
         entities = message.entities
         text = message.text
         chat = message.chat
@@ -444,18 +446,29 @@ class Moderator:
         bot = message.bot
 
         for entity in entities:
+            logger.info(f'checking entity with {entity.type}')
             if entity.type == types.MessageEntityType.URL:
                 await message.delete()
                 await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
 
             if entity.type == types.MessageEntityType.MENTION:
                 name = entity.get_text(text)
-                chat = await bot.get_chat(name)
-                if types.ChatType.is_group_or_super_group(chat):
+                logger.info(f'received mention: {name}')
+
+                try:
+                    ad = await bot.get_chat(name)
+
+                except Unauthorized as e:
+                    logger.info(f'{e}')
                     await message.delete()
                     await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
 
+                except ChatNotFound:
+                    logger.info(f'its user!')
+                    return
 
-
-
-
+                else:
+                    logger.info(f'{chat.full_name}')
+                    if types.ChatType.is_group_or_super_group(ad):
+                        await message.delete()
+                        await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
