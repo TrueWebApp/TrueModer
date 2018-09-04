@@ -457,7 +457,7 @@ class Moderator:
 
             if entity.type == types.MessageEntityType.MENTION:
                 name = entity.get_text(text)
-                logger.info(f'received mention: {name}')
+                logger.debug(f'Received mention: {name}. Checking...')
 
                 try:
                     mentioned_chat = await bot.get_chat(name)
