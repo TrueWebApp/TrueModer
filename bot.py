@@ -95,8 +95,8 @@ async def register_handlers():
     dp.register_message_handler(moder.ban, regexp=r'^!.*бан.*', content_types=types.ContentType.TEXT)
     dp.register_message_handler(moder.mute, regexp=r'^!.*мол[ч,к].*', content_types=types.ContentType.TEXT)
 
-    # explicit filter
-    dp.register_message_handler(moder.check_explicit, custom_filters=[types.ChatType.is_super_group],
+    # text filter
+    dp.register_message_handler(moder.check_text, custom_filters=[types.ChatType.is_super_group],
                                 content_types=types.ContentType.TEXT)
 
 

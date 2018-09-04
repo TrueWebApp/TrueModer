@@ -380,6 +380,11 @@ class Moderator:
             return True
 
     @rate_limit(0.5, 'text')
+    async def check_text(self, message: types.Message):
+        await self.check_explicit(message)
+        await self.check_link(message)
+
+    @rate_limit(0.5, 'text')
     async def check_explicit(self, message: types.Message):
         from explicit import find_explicit
 
@@ -429,3 +434,28 @@ class Moderator:
             await self.kick(chat.id, user.id, 24 * 60 * 60)
             jail[user.id] = 3
             return
+
+    @rate_limit(0.5, 'link')
+    async def check_link(self, message: types.Message):
+        entities = message.entities
+        text = message.text
+        chat = message.chat
+        user = message.from_user
+        bot = message.bot
+
+        for entity in entities:
+            if entity.type == types.MessageEntityType.URL:
+                await message.delete()
+                await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
+
+            if entity.type == types.MessageEntityType.MENTION:
+                name = entity.get_text(text)
+                chat = await bot.get_chat(name)
+                if types.ChatType.is_group_or_super_group(chat):
+                    await message.delete()
+                    await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
+
+
+
+
+
