@@ -382,7 +382,7 @@ class Moderator:
 
     @rate_limit(0.5, 'text')
     async def check_text(self, message: types.Message):
-        logger.info('Checking text')
+        logger.debug(f'Checking received text: {message.text}')
         await self.check_explicit(message)
         await self.check_link(message)
 
