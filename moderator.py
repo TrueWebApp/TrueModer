@@ -1,16 +1,17 @@
-from aiogram.utils.exceptions import *
-from aiogram.utils import markdown as md
-from aiogram import types, Bot
-from datetime import datetime, timedelta
-from misc import log_repr
-from languages import underscore as _
-from antiflood import rate_limit
-from aiochatbase import Chatbase
-
 import asyncio as aio
 import logging
 import random
 import re
+from datetime import datetime, timedelta
+
+from aiogram import types, Bot
+from aiogram.utils import markdown as md
+from aiogram.utils.exceptions import *
+
+from aiochatbase import Chatbase
+from antiflood import rate_limit
+from languages import underscore as _
+from misc import log_repr
 
 logger = logging.getLogger(f'TrueModer.{__name__}')
 
@@ -438,7 +439,8 @@ class Moderator:
 
     @rate_limit(0.5, 'link')
     async def check_link(self, message: types.Message):
-        logger.info("Lets check links")
+        """ Find links and @group mentions """
+
         entities = message.entities
         text = message.text
         chat = message.chat
@@ -446,29 +448,33 @@ class Moderator:
         bot = message.bot
 
         for entity in entities:
-            logger.info(f'checking entity with {entity.type}')
+            logger.debug(f'Checking entity with {entity.type}')
             if entity.type == types.MessageEntityType.URL:
+                logger.info('Url found. Deleting. Restricting.')
                 await message.delete()
                 await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
+                return
 
             if entity.type == types.MessageEntityType.MENTION:
                 name = entity.get_text(text)
                 logger.info(f'received mention: {name}')
 
                 try:
-                    ad = await bot.get_chat(name)
+                    mentioned_chat = await bot.get_chat(name)
 
                 except Unauthorized as e:
-                    logger.info(f'{e}')
+                    logger.info('@-mention of group found. Deleting. Restricting.')
                     await message.delete()
                     await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
+                    return
 
                 except ChatNotFound:
-                    logger.info(f'its user!')
+                    logger.debug('@-mention is user. Nothing to do.')
                     return
 
                 else:
-                    logger.info(f'{chat.full_name}')
-                    if types.ChatType.is_group_or_super_group(ad):
+                    logger.info('@-mention of group found. Deleting. Restricting.')
+                    if types.ChatType.is_group_or_super_group(mentioned_chat):
                         await message.delete()
                         await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
+                        return
