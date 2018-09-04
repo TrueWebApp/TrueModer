@@ -59,7 +59,7 @@ async def group_migrates_to_supergroup(message: types.Message):
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton(text=f'ℹ️ Инструкция', url=config.FAQ_LINK))
     text = _(f"<b>Отлично!</b> \n\n"
-             f"Теперь для начала игры требуется дать мне следующие права администратора: \n"
+             f"Теперь для начала работы требуется дать мне следующие права администратора: \n"
              f"- удалять сообщения; \n"
              f"- блокировать пользователей \n"
              f"- закреплять сообщения. \n\n"
