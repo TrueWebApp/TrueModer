@@ -1,13 +1,14 @@
 import asyncio
 import logging
-import help
-import config
 
 from aiogram import types
 from aiogram.utils.executor import start_polling, start_webhook
-from languages import underscore as _
-from engine import dp, moder, bot, cb
+
+import config
+import help
 from antiflood import ThrottlingMiddleware
+from engine import dp, moder, bot, cb
+from languages import underscore as _
 from misc import set_logging_levels
 
 # logging
@@ -28,7 +29,7 @@ async def errors_handler(dispatcher, update, exception):
     :param exception:
     :return: stdout logging
     """
-    from aiogram.utils.exceptions import BadRequest, Unauthorized, InvalidQueryID, TelegramAPIError, \
+    from aiogram.utils.exceptions import Unauthorized, InvalidQueryID, TelegramAPIError, \
         CantDemoteChatCreator, MessageNotModified, MessageToDeleteNotFound
 
     if isinstance(exception, CantDemoteChatCreator):
@@ -48,14 +49,14 @@ async def errors_handler(dispatcher, update, exception):
         return
 
     if isinstance(exception, InvalidQueryID):
-        logger.exception(f'InvalidQueryID: {exception} \nUpdate: {update}', exc_info=True)
+        logger.exception(f'InvalidQueryID: {exception} \nUpdate: {update}')
         return
 
     if isinstance(exception, TelegramAPIError):
-        logger.exception(f'TelegramAPIError: {exception} \nUpdate: {update}', exc_info=True)
+        logger.exception(f'TelegramAPIError: {exception} \nUpdate: {update}')
         return
 
-    logger.exception(f'Update: {update} \n{exception}', exc_info=True)
+    logger.exception(f'Update: {update} \n{exception}')
 
 
 @dp.message_handler(types.ChatType.is_private, commands=['start', 'help'])
