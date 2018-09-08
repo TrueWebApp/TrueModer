@@ -1,12 +1,19 @@
 import logging
+import config
+import sys
 from aiogram.types import Chat, User
 
 logger = logging.getLogger(f'TrueModer.{__name__}')
 
 
-def set_logging_levels():
+def setup_logger():
+    logging.basicConfig(format='%(asctime)s | %(name)s:%(lineno)d | %(levelname)s | %(message)s',
+                        level=config.LOGGING_LEVEL, stream=sys.stdout)
+
     logging.getLogger('aiohttp').setLevel(logging.WARNING)
     logging.getLogger('chatbase').setLevel(logging.INFO)
+
+    return logging.getLogger('TrueModer')
 
 
 def log_repr(o):

@@ -1,3 +1,4 @@
+import logging
 
 # telegram
 TELEGRAM_TOKEN = '4234423:AAEswagGNsfuREYdagrCPkgLvda1C_5frsZsBYrvLefdc'  # DevTester
@@ -26,3 +27,6 @@ super_admins = [12345678, ]
 # content
 BOT_NAME = '@TrueModerBot'
 FAQ_LINK = 'http://telegra.ph/True-Moder-07-31'
+
+# logging
+LOGGING_LEVEL = logging.INFO

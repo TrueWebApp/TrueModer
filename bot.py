@@ -1,5 +1,4 @@
 import asyncio
-import logging
 
 from aiogram import types
 from aiogram.utils.executor import start_polling, start_webhook
@@ -9,13 +8,9 @@ import help
 from antiflood import ThrottlingMiddleware
 from engine import dp, moder, bot, cb
 from languages import underscore as _
-from misc import set_logging_levels
+from misc import setup_logger
 
-# logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('TrueModer')
-set_logging_levels()
-
+logger = setup_logger()
 loop = asyncio.get_event_loop()
 
 
