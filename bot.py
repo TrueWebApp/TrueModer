@@ -96,15 +96,15 @@ async def register_handlers():
                                 content_types=types.ContentType.TEXT)
 
 
-async def on_startup(_):
+async def on_startup(dispatcher):
     """
     Auto exec function on startup of your app
 
-    :param _: dispatcher
+    :param dispatcher: dispatcher
     :return: None
     """
     await register_handlers()
-    dp.middleware.setup(ThrottlingMiddleware(limit=0))
+    dispatcher.middleware.setup(ThrottlingMiddleware(limit=0))
 
     if config.WEBHOOK:
         await bot.set_webhook(config.WEBHOOK_URL)
