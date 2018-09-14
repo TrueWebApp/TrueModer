@@ -470,7 +470,6 @@ class Moderator:
 
                 except ChatNotFound:
                     logger.debug('@-mention is user. Nothing to do.')
-                    return
 
                 else:
                     logger.info('@-mention of group found. Deleting. Restricting.')
