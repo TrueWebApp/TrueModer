@@ -20,6 +20,7 @@ PROXY_PASSWORD = 'proxy_password'  # or '' to disable
 
 # analytics
 CHATBASE_KEY = 'agGNsfuREYdagrCPkgLvda1C_5frsZsBYrv'
+CHATBASE_POOL_SIZE = 20
 
 # vars
 super_admins = [12345678, ]
@@ -27,6 +28,9 @@ super_admins = [12345678, ]
 # content
 BOT_NAME = '@TrueModerBot'
 FAQ_LINK = 'http://telegra.ph/True-Moder-07-31'
+
+# db mode
+DB_MODE = False
 
 # logging
 LOGGING_LEVEL = logging.INFO
