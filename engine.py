@@ -35,5 +35,6 @@ def get_proxy_data():
 url, auth = get_proxy_data()
 bot = Bot(token=config.TELEGRAM_TOKEN, loop=loop, proxy=url, proxy_auth=auth, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage(), run_tasks_by_default=True)
-cb = Chatbase(api_key=config.CHATBASE_KEY, loop=loop, platform='Telegram', task_mode=True, pool_size=5)
+cb = Chatbase(api_key=config.CHATBASE_KEY, loop=loop, platform='Telegram', task_mode=True,
+              pool_size=config.CHATBASE_POOL_SIZE)
 moder = Moderator(bot, cb)
