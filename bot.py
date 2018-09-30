@@ -71,6 +71,19 @@ async def start_private(message: types.Message):
     await message.reply(text, reply_markup=markup, reply=False)
 
 
+TYPES_TO_DELETE = types.ContentType.STICKER + types.ContentType.VIDEO_NOTE + types.ContentType.VIDEO + \
+                  types.ContentType.DOCUMENT + types.ContentType.CONTACT + types.ContentType.PHOTO + \
+                  types.ContentType.GAME + types.ContentType.ANIMATION
+
+
+@dp.message_handler(types.ChatType.is_super_group, content_types=TYPES_TO_DELETE)
+async def delete_media(message: types.Message):
+    user = message.from_user
+    chat = message.chat
+    await message.delete()
+    logger.info(f'Deleted message from {user.full_name} ({user.id}) in {chat.full_name} ({chat.id})')
+
+
 async def register_handlers():
     """
     Function-container with registering external (non-decorated) handlers
