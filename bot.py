@@ -80,6 +80,10 @@ TYPES_TO_DELETE = types.ContentType.STICKER + types.ContentType.VIDEO_NOTE + typ
 async def delete_media(message: types.Message):
     user = message.from_user
     chat = message.chat
+
+    if user.id in config.super_admins:
+        return
+
     await message.delete()
     logger.info(f'Deleted message from {user.full_name} ({user.id}) in {chat.full_name} ({chat.id})')
 
@@ -132,6 +136,7 @@ async def on_shutdown(_):
     """
     await bot.close()
     await cb.close()
+    await asyncio.sleep(0.250)
 
 
 if __name__ == '__main__':
