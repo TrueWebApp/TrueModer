@@ -107,8 +107,8 @@ class Moderator:
         time = re.search(r'(\d+)', message.text)  # в сообщении есть числа
         time = time.group() if time else None
 
-        minutes = re.search(r'мин|мин[^ ]+', message.text)
-        hours = re.search(r'час', message.text)
+        minutes = re.search(r'^мин|мин[^ ]+', message.text)
+        hours = re.search(r'^час|час[^ ]+', message.text)
         days = re.search(r'дн[^ ]|день|сутки|суток', message.text)
         weeks = re.search(r'недел', message.text)
 
