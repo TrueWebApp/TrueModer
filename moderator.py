@@ -452,7 +452,7 @@ class Moderator:
             if entity.type == types.MessageEntityType.URL:
                 logger.info('Url found. Deleting. Restricting.')
                 await message.delete()
-                await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
+                await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=65)
                 return
 
             if entity.type == types.MessageEntityType.MENTION:
@@ -465,7 +465,7 @@ class Moderator:
                 except Unauthorized as e:
                     logger.info('@-mention of group found. Deleting. Restricting.')
                     await message.delete()
-                    await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
+                    await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=65)
                     return
 
                 except ChatNotFound:
@@ -476,5 +476,5 @@ class Moderator:
                     logger.info('@-mention of group found. Deleting. Restricting.')
                     if types.ChatType.is_group_or_super_group(mentioned_chat):
                         await message.delete()
-                        await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=5)
+                        await self.restrict_user(chat_id=chat.id, user_id=user.id, seconds=65)
                         return
