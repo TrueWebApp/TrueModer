@@ -220,18 +220,23 @@ async def find_explicit(text: str):
 
     for pattern in patterns:
         to_find = re.compile(pattern, flags=re.IGNORECASE)
-        result = re.search(to_find, text)
+        result = re.match(to_find, text)
 
         if result:
             word = result.group()
 
             if word.lower() in exclude_list:
+                logger.info(f'{word} in exclude list')
                 continue
 
             logger.info(f'{word} - {pattern}')
             return True
 
     for word in text.lower().split():
+        if word in exclude_list:
+            logger.info(f'{word} in exclude list')
+            continue
+
         if word in explicit_list:
             logger.info(f'{word}')
             return True
