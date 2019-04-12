@@ -105,8 +105,8 @@ async def register_handlers():
                                 content_types=types.ContentType.MIGRATE_FROM_CHAT_ID)
 
     # moderator commands
-    dp.register_message_handler(moder.ban, regexp=r'^!.*бан.*', content_types=types.ContentType.TEXT)
-    dp.register_message_handler(moder.mute, regexp=r'^!.*мол[ч,к].*', content_types=types.ContentType.TEXT)
+    # dp.register_message_handler(moder.ban, regexp=r'^!.*бан.*', content_types=types.ContentType.TEXT)
+    # dp.register_message_handler(moder.mute, regexp=r'^!.*мол[ч,к].*', content_types=types.ContentType.TEXT)
 
     # text filter
     dp.register_message_handler(moder.check_text, custom_filters=[types.ChatType.is_super_group],
